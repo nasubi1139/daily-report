@@ -61,5 +61,5 @@ const submitData = async (e) => {
 
 // ページ内にid"js-form"が存在すれば非同期の関数を実行
 if(document.getElementById("js-form")) {
-  document.getElementById("js-form").addEventListener("submit"), (e) =>  submitData(e, addDoc, collection, db);
-}
+  document.getElementById("js-form").addEventListener("submit", (e) =>  submitData(e, addDoc, collection, db));
+};
