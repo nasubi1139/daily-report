@@ -1,17 +1,17 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { fetchHistoryData } from "./my-modules/fetchHistoryData";
+import { submitData } from "./my-modules/submit-data";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBBjGz8AP_IBQZIaWm-5w0ZJQcXIsceGlQ",
-  authDomain: "daily-report-e2bdd.firebaseapp.com",
-  projectId: "daily-report-e2bdd",
-  storageBucket: "daily-report-e2bdd.firebasestorage.app",
-  messagingSenderId: "1082825651206",
-  appId: "1:1082825651206:web:1c3f1aff0e277f7390bf87"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_AROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.APP_ID
 };
 
 // Firebaseを初期化
@@ -20,44 +20,10 @@ const app = initializeApp(firebaseConfig);
 // Cloud Firestoreを初期化
 const db = getFirestore(app);
 
-// 非同期の関数 Cloud Firestoreから取得したデータを表示する
-const fetchHistoryData = async () => {
-  let tags = "";
-
-  // reportsコレクションのデータを取得
-  const querySnapshot = await getDocs(collection(db, "reports"));
-
-  querySnapshot.forEach((doc) => {
-    console.log(`${doc.id} => ${doc.data()}`);
-    tags += `<tr><td>${doc.data().date}</td><td>${doc.data().name}</td><td>${doc.data().work}</td><td>${doc.data().comment}</td></tr>`;
-  });
-
-  document.getElementById("js-history").innerHTML = tags;
-};
-
 // ページ内にid"js-history"が存在すれば非同期の関数を実行
 if (document.getElementById("js-history")) {
   fetchHistoryData(getDocs, collection, db);
 }
-
-// 非同期の関数 Cloud Firestoreにデータを送信
-const submitData = async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-
-  try {
-    const docRef = await addDoc(collection(db, "reports"), {
-      date: new Date(),
-      name: formData.get("name"),
-      work: formData.get("work"),
-      comment: formData.get("comment"),
-    });
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
 
 // ページ内にid"js-form"が存在すれば非同期の関数を実行
 if(document.getElementById("js-form")) {
