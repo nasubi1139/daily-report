@@ -1,4 +1,5 @@
 // 非同期の関数 Cloud Firestoreにデータを送信
+// main.jsから分離し、Firebaseの関数を直接インポートしていないため引数がいる
 export const submitData = async (e, addDoc, collection, db) => {
   e.preventDefault();
 
